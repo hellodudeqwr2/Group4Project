@@ -1,51 +1,198 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Simple Slideshow</title>
+    <title>Art Slideshow</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f5f5f5;
+            font-family: Arial, sans-serif;
+        }
+
+        .slideshow-container {
+            position: relative;
+            width: 650px;
+            text-align: center;
+        }
+
+        .slide {
+            display: none;
+        }
+
+        .artist {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .description {
+            margin-top: 10px;
+            font-size: 16px;
+        }
+
+        img {
+            width: 600px;
+            height: 400px;
+        }
+
+        .fade {
+            animation: fadeEffect 1s;
+        }
+
+        @keyframes fadeEffect {
+            from { opacity: 0.4; }
+            to { opacity: 1; }
+        }
+
+        .prev, .next {
+            cursor: pointer;
+            position: absolute;
+            top: 50%;
+            padding: 16px;
+            font-size: 22px;
+            font-weight: bold;
+            user-select: none;
+            transform: translateY(-50%);
+        }
+
+        .prev { left: 0; }
+        .next { right: 0; }
+
+        .dots {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .dot {
+            height: 12px;
+            width: 12px;
+            margin: 0 4px;
+            display: inline-block;
+            border-radius: 50%;
+            background-color: #bbb;
+            cursor: pointer;
+        }
+
+        .active {
+            background-color: #333;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 8px 16px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
 
-    <h1>Image Slideshow</h1>
+<div class="slideshow-container">
 
-    <img id="slide" src="image1.jpg" width="500">
+    <div class="slide fade">
+        <div class="artist">Artist One</div>
+        <img src="https://picsum.photos/600/400?random=1">
+        <div class="description">Description of artwork one goes here.</div>
+    </div>
 
-    <br><br>
+    <div class="slide fade">
+        <div class="artist">Artist Two</div>
+        <img src="https://picsum.photos/600/400?random=2">
+        <div class="description">Description of artwork two goes here.</div>
+    </div>
 
-    <button onclick="previousImage()">Previous</button>
-    <button onclick="nextImage()">Next</button>
+    <div class="slide fade">
+        <div class="artist">Artist Three</div>
+        <img src="https://picsum.photos/600/400?random=3">
+        <div class="description">Description of artwork three goes here.</div>
+    </div>
 
-    <script>
-        var images = [
-            "image1.jpg",
-            "image2.jpg",
-            "image3.jpg",
-            "image4.jpg"
-        ];
+    <div class="slide fade">
+        <div class="artist">Artist Four</div>
+        <img src="https://picsum.photos/600/400?random=4">
+        <div class="description">Description of artwork four goes here.</div>
+    </div>
 
-        var currentIndex = 0;
+    <div class="slide fade">
+        <div class="artist">Artist Five</div>
+        <img src="https://picsum.photos/600/400?random=5">
+        <div class="description">Description of artwork five goes here.</div>
+    </div>
 
-        function showImage() {
-            document.getElementById("slide").src = images[currentIndex];
+    <div class="slide fade">
+        <div class="artist">Artist Six</div>
+        <img src="https://picsum.photos/600/400?random=6">
+        <div class="description">Description of artwork six goes here.</div>
+    </div>
+
+    <span class="prev" onclick="changeSlide(-1)">❮</span>
+    <span class="next" onclick="changeSlide(1)">❯</span>
+
+</div>
+
+<div class="dots">
+    <span class="dot" onclick="currentSlide(0)"></span>
+    <span class="dot" onclick="currentSlide(1)"></span>
+    <span class="dot" onclick="currentSlide(2)"></span>
+    <span class="dot" onclick="currentSlide(3)"></span>
+    <span class="dot" onclick="currentSlide(4)"></span>
+    <span class="dot" onclick="currentSlide(5)"></span>
+</div>
+
+<button onclick="toggleAutoScroll()" id="toggleButton">
+    Turn Auto Scroll ON
+</button>
+
+<script>
+    var slideIndex = 0;
+    var slides = document.getElementsByClassName("slide");
+    var dots = document.getElementsByClassName("dot");
+    var autoScroll = false;
+    var autoInterval;
+
+    function showSlide(index) {
+        if (index >= slides.length) slideIndex = 0;
+        else if (index < 0) slideIndex = slides.length - 1;
+        else slideIndex = index;
+
+        for (var i = 0; i < slides.length; i++) {
+            slides[i].style.display = "none";
+            dots[i].classList.remove("active");
         }
 
-        function nextImage() {
-            currentIndex++;
-            if (currentIndex >= images.length) {
-                currentIndex = 0;
-            }
-            showImage();
-        }
+        slides[slideIndex].style.display = "block";
+        dots[slideIndex].classList.add("active");
+    }
 
-        function previousImage() {
-            currentIndex--;
-            if (currentIndex < 0) {
-                currentIndex = images.length - 1;
-            }
-            showImage();
-        }
+    function changeSlide(n) {
+        showSlide(slideIndex + n);
+    }
 
-        setInterval(nextImage, 3000);
-    </script>
+    function currentSlide(n) {
+        showSlide(n);
+    }
+
+    function toggleAutoScroll() {
+        autoScroll = !autoScroll;
+        var button = document.getElementById("toggleButton");
+
+        if (autoScroll) {
+            button.innerText = "Turn Auto Scroll OFF";
+            autoInterval = setInterval(function() {
+                changeSlide(1);
+            }, 5000);
+        } else {
+            button.innerText = "Turn Auto Scroll ON";
+            clearInterval(autoInterval);
+        }
+    }
+
+    showSlide(slideIndex);
+</script>
 
 </body>
 </html>
